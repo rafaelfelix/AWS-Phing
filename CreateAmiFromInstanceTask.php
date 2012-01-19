@@ -199,7 +199,7 @@ class CreateAmiFromInstanceTask extends AwsTask
 
         while($status === self::STATE_PENDING)
         {
-            if(time() - $startTime >= $this->_timeout)
+            if((time() - $startTime) >= $this->_timeout)
                 throw new Exception("AMI Creation Timeout");
 
             sleep($this->_pollPeriod);
@@ -207,7 +207,7 @@ class CreateAmiFromInstanceTask extends AwsTask
         }
 
         if($status != self::STATE_AVAILABLE)
-            throw new UnexpectedValueException("AMI Status incorrect. Excepted available, returned " . $status);
+            throw new UnexpectedValueException("AMI Status incorrect. Expected " . self::STATE_AVAILABLE . ", returned " . $status);
         
         $this->project->setProperty($this->outputProperty, $imageId);
     }
