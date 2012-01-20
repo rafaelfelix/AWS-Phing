@@ -70,4 +70,17 @@ class AwsTask extends Task
         $this->_secretKey = $secretKey;
         return $this;
     }
+    
+    /**
+     * Get Options Array for AWS Class Constructors
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return array(
+                'key'    => $this->_key,
+                'secret' => $this->_secret,
+            );
+    }
 }
