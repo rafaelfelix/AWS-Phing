@@ -53,7 +53,7 @@ class CreateAmiFromInstanceTask extends AwsTask
      *
      * @var string
      */
-    private $outputProperty = null;
+    private $_outputProperty = null;
 
     /**
      * The variable to set with the created ami id
@@ -64,7 +64,7 @@ class CreateAmiFromInstanceTask extends AwsTask
      */
     public function setOutput($str)
     {
-        $this->outputProperty = $str;
+        $this->_outputProperty = $str;
     }
 
     /**
@@ -134,40 +134,43 @@ class CreateAmiFromInstanceTask extends AwsTask
      */
     public function init()
     {
-      // nothing to do here
+        // nothing to do here
     }
 
     /**
      * Create an AMI Image for the given instance
      *
-     * @param AmazonEC2 $ec2        Amazon EC2 Class Instance
+     * @param AmazonEC2 $ecTwo      Amazon EC2 Class Instance
      * @param string    $instanceId valid EC2 Instance ID
      * @param string    $imageName  resulting AMI Name
      *
      * @return string
      */
-    private function _createImage(AmazonEC2 $ec2, $instanceId, $imageName)
+    private function _createImage(AmazonEC2 $ecTwo, $instanceId, $imageName)
     {
-        $response = $ec2->create_image($instanceId, $imageName);
+        $response = $ecTwo->create_image($instanceId, $imageName);
         return (string)$response->body->imageId;
     }
 
     /**
      * Get AMI Image State
      *
-     * @param AmazonEC2 $ec2     Amazon EC2 Class Instance
+     * @param AmazonEC2 $ecTwo   Amazon EC2 Class Instance
      * @param string    $imageId valid EC2 AMI ID
      *
      * @return string
      */
-    private function _getImageState(AmazonEC2 $ec2, $imageId)
+    private function _getImageState(AmazonEC2 $ecTwo, $imageId)
     {
-        $imageStatus = $ec2->describe_images(array("ImageId" => $imageId));
+        $imageStatus = $ecTwo->describe_images(array("ImageId" => $imageId));
         return (string)$imageStatus->body->imagesSet->item->imageState;
     }
 
     /**
      * The main entry point method.
+     *
+     * @throws InvalidArgumentException
+     * @throws UnexpectedValueException
      *
      * @return void
      */
@@ -179,12 +182,12 @@ class CreateAmiFromInstanceTask extends AwsTask
         if(is_null($this->_instanceId))
             throw new InvalidArgumentException("Must provide a valid AWS Instance ID");
 
-        $ec2 = new AmazonEC2($this->getOptions());
+        $ecTwo = new AmazonEC2($this->getOptions());
 
         if(!is_null($this->_region))
-            $ec2->set_region($this->_region);
+            $ecTwo->set_region($this->_region);
 
-        $imageId = $this->_createImage($ec2, $this->_instanceId, $this->_name);
+        $imageId = $this->_createImage($ecTwo, $this->_instanceId, $this->_name);
 
         if(is_null($imageId) || $imageId == "")
             throw new UnexpectedValueException("An Image ID was not returned from AWS");
@@ -198,12 +201,12 @@ class CreateAmiFromInstanceTask extends AwsTask
                 throw new Exception("AMI Creation Timeout");
 
             sleep($this->_pollPeriod);
-            $status = $this->_getImageState($ec2, $imageId);
+            $status = $this->_getImageState($ecTwo, $imageId);
         }
 
         if($status != self::STATE_AVAILABLE)
             throw new UnexpectedValueException("AMI Status incorrect. Expected " . self::STATE_AVAILABLE . ", returned " . $status);
         
-        $this->project->setProperty($this->outputProperty, $imageId);
+        $this->project->setProperty($this->_outputProperty, $imageId);
     }
 }
