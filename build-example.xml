@@ -9,7 +9,7 @@
 
     <taskdef name="createami" classname="phing.tasks.user.CreateAmiFromInstanceTask" />
 
-    <createami key="KEY" secret="SECRET" region="eu-west-1" instance="i-a000bcd0"  output="OUTPUT_VAR" />
+    <createami key="KEY" secret="SECRET" region="ec2.eu-west-1.amazonaws.com" instance="i-a000bcd0"  output="OUTPUT_VAR" />
     <echo msg="${OUTPUT_VAR}" />
 
 </project>
