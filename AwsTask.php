@@ -1,6 +1,6 @@
 <?php
 require_once "phing/Task.php";
-require_once "sdk-1.4.7/sdk.class.php";
+require_once "aws-sdk-for-php/sdk.class.php";
 
 /**
  * Amazon Web Services Core Phing Task
