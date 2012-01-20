@@ -179,12 +179,7 @@ class CreateAmiFromInstanceTask extends AwsTask
         if(is_null($this->_instanceId))
             throw new InvalidArgumentException("Must provide a valid AWS Instance ID");
 
-        $ec2 = new AmazonEC2(
-            array(
-             'key'    => $this->_key,
-             'secret' => $this->_secretKey,
-            )
-        );
+        $ec2 = new AmazonEC2($this->getOptions());
 
         if(!is_null($this->_region))
             $ec2->set_region($this->_region);
