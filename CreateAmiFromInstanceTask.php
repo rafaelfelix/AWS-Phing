@@ -148,7 +148,7 @@ class CreateAmiFromInstanceTask extends AwsTask
      */
     private function _createImage(AmazonEC2 $ec2, $instanceId, $imageName)
     {
-        $response = $ec2->create_image($this->_instanceId, $this->_name);
+        $response = $ec2->create_image($instanceId, $imageName);
         return (string)$response->body->imageId;
     }
 
