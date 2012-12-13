@@ -22,7 +22,7 @@ class AwsTask extends Task
      *
      * @var string
      */
-    protected $_secretKey = null;
+    protected $_secret = null;
 
 
     /**
@@ -65,9 +65,9 @@ class AwsTask extends Task
      *
      * @return AwsTask
      */
-    public function setSecret($secretKey)
+    public function setSecret($secret)
     {
-        $this->_secretKey = $secretKey;
+        $this->_secret = $secret;
         return $this;
     }
     
