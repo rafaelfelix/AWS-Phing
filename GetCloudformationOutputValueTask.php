@@ -116,9 +116,10 @@ class GetCloudformationOutputValueTask extends AwsTask
             throw new UnexpectedValueException("A response for the describe_stacks method was not returned from AWS");
 
         $outputValue = null;
-        foreach($describeStacksResponse->body->DescribeStacksResult->Stacks->member->Outputs as $output) {
-            if($output->member->OutputKey == $this->_outputKey) {
-                $outputValue = $output->member->OutputValue;
+        foreach($describeStacksResponse->body->DescribeStacksResult->Stacks->member->Outputs->member as $output) {
+            if($output->OutputKey == $this->_outputKey) {
+                $outputValue = $output->OutputValue;
+                break;
             }
         }
 
